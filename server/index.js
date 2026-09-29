@@ -19,6 +19,13 @@ app.post('/shorten', (req, res)=>{
     return res.status(201).json({code:`${code}`});
 });
 
+app.get('/:code', (req, res)=>{
+    const code = req.params.code;
+    const value = myDB.get(code);
+    if(!value) return res.status(404).json({error: "Short link not found"});
+    return res.redirect(value);
+})
+
 
 app.listen(PORT,()=>{
     console.log(`listening in port: ${PORT}`);
