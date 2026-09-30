@@ -12,7 +12,12 @@ app.get('/',(req, res)=>{
 
 app.post('/shorten', (req, res)=>{
     const url = req.body?.url;
-    if(!url) return res.status(400).json({error:"Please enter a valid url"});
+    if(!url) return res.status(400).json({error:"url cannot be empty"});
+    try {
+        new URL(url);
+    } catch (error) {
+       return res.status(400).json({error: "Please enter a valid url"})
+    }
     const code = Math.random().toString(36).substring(2,8);
     myDB.set(code,url);
     console.log(myDB);
