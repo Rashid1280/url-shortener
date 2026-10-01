@@ -3,15 +3,15 @@ require('./config/db');
 const PORT= process.env.PORT;
 const express = require('express');
 const app = express();
+const Link = require('./models/Link')
 
 app.use(express.json());
-const myDB = new Map();
 
 app.get('/',(req, res)=>{
     res.send("shortener is alive baby.");
 });
 
-app.post('/shorten', (req, res)=>{
+app.post('/shorten', async (req, res)=>{
     const url = req.body?.url;
     if(!url) return res.status(400).json({error:"url cannot be empty"});
     try {
@@ -20,16 +20,23 @@ app.post('/shorten', (req, res)=>{
        return res.status(400).json({error: "Please enter a valid url"})
     }
     const code = Math.random().toString(36).substring(2,8);
-    myDB.set(code,url);
-    console.log(myDB);
-    return res.status(201).json({code:`${code}`});
+    try {
+        await Link.create({code,url});
+        return res.status(201).json({code});
+    } catch (error) {
+        return res.status(500).error(error);
+    }
 });
 
-app.get('/:code', (req, res)=>{
+app.get('/:code', async (req, res)=>{
     const code = req.params.code;
-    const value = myDB.get(code);
-    if(!value) return res.status(404).json({error: "Short link not found"});
-    return res.redirect(value);
+    try {
+        const value = await Link.findOne({code});
+        if(!value) return res.status(404).json({error: "Short link not found"});
+        return res.redirect(value.url);
+    } catch (error) {
+        return res.status(500).error(error);
+    }   
 })
 
 
