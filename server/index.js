@@ -24,7 +24,8 @@ app.post('/shorten', async (req, res)=>{
         await Link.create({code,url});
         return res.status(201).json({code});
     } catch (error) {
-        return res.status(500).error(error);
+        console.error(error)
+        return res.status(500).json({error:"Something went wrong in server side"});
     }
 });
 
@@ -35,7 +36,8 @@ app.get('/:code', async (req, res)=>{
         if(!value) return res.status(404).json({error: "Short link not found"});
         return res.redirect(value.url);
     } catch (error) {
-        return res.status(500).error(error);
+        console.error(error);
+        return res.status(500).json({error:"Something went wrong on server side"});   
     }   
 })
 
