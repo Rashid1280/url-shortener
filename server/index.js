@@ -4,6 +4,8 @@ const PORT= process.env.PORT;
 const express = require('express');
 const app = express();
 const Link = require('./models/Link')
+const getNextSequence = require('./utils/getNextSequence');
+const encodeBase62 = require('./utils/base62');
 
 app.use(express.json());
 
@@ -19,8 +21,10 @@ app.post('/shorten', async (req, res)=>{
     } catch (error) {
        return res.status(400).json({error: "Please enter a valid url"})
     }
-    const code = Math.random().toString(36).substring(2,8);
+ 
     try {
+        const counter = await getNextSequence();
+        const code = encodeBase62(counter);
         await Link.create({code,url});
         return res.status(201).json({code});
     } catch (error) {
