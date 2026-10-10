@@ -34,29 +34,6 @@ app.post('/shorten', async (req, res)=>{
     }
 });
 
-//hash-truncate approach
-
-app.post('/shorten-b', async (req, res)=>{
-    const url = req.body?.url;
-    if(!url) return res.status(400).json({error:"url cannot be empty"});
-    try {
-        new URL(url);
-    } catch (error) {
-       return res.status(400).json({error: "Please enter a valid url"})
-    }
- 
-    try {
-        const obj = await hashLink(url);
-        if(obj.created){
-        return res.status(201).json(obj);
-        }
-            return res.status(200).json(obj);
-    } catch (error) {
-        console.error(error)
-        return res.status(500).json({error:"Something went wrong in server side"});
-    }
-});
-
 app.get('/:code', async (req, res)=>{
     const code = req.params.code;
     try {
