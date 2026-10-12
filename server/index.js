@@ -108,6 +108,26 @@ app.post("/shorten", async (req, res) => {
   }
 });
 
+app.get("/stats/:code", async (req, res) => {
+  const code = req.params.code;
+  try {
+    const link = await Link.findOne({ code });
+    if (!link) {
+      return res.status(404).json({ error: "Short link not found" });
+    }
+    return res.status(200).json({
+      code,
+      url: link.url,
+      clicks: link.clicks,
+      createdAt: link.createdAt,
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ error: "Something went wrong on server side" });
+  }
+});
+
 //redirect get path
 app.get("/:code", async (req, res) => {
   const code = req.params.code;
