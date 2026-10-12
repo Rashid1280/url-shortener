@@ -112,9 +112,9 @@ app.post("/shorten", async (req, res) => {
 app.get("/:code", async (req, res) => {
   const code = req.params.code;
   try {
-    const value = await Link.findOne({ code });
-    if (!value) return res.status(404).json({ error: "Short link not found" });
-    return res.redirect(value.url);
+    const link = await Link.findOneAndUpdate({ code }, { $inc: { clicks: 1 } });
+    if (!link) return res.status(404).json({ error: "Short link not found" });
+    return res.redirect(link.url);
   } catch (error) {
     console.error(error);
     return res
