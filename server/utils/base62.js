@@ -1,9 +1,10 @@
-const ALPHABET = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const ALPHABET =
+  "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 function encodeBase62(n) {
   if (n === 0) return ALPHABET[0];
 
-  let result = '';
+  let result = "";
   while (n > 0) {
     const remainder = n % 62;
     result = ALPHABET[remainder] + result;
