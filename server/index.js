@@ -25,6 +25,7 @@ const RESERVED = [
 ];
 const MAX_ATTEMPTS = 5;
 const ALLOWED_PROTOCOLS = ["http:", "https:"];
+const MAX_EXPIRY_MINUTES = 525600;
 const PORT = process.env.PORT;
 const express = require("express");
 const app = express();
@@ -42,7 +43,9 @@ app.get("/", (req, res) => {
 app.post("/shorten", async (req, res) => {
   //URL check for validation
   const url = req.body?.url;
-  if (!url) return res.status(400).json({ error: "url cannot be empty" });
+  if (typeof url !== "string" || !url.trim()) {
+    return res.status(400).json({ error: "url must be a non-empty string" });
+  }
   let parsed;
   try {
     parsed = new URL(url);
@@ -53,6 +56,22 @@ app.post("/shorten", async (req, res) => {
     return res
       .status(400)
       .json({ error: "Only http and https links are allowed" });
+  }
+
+  //expiry logic
+  let expiresAt;
+  const minutes = req.body?.expiresInMinutes;
+  if (minutes !== undefined && minutes !== null) {
+    if (
+      !Number.isInteger(minutes) ||
+      minutes < 1 ||
+      minutes > MAX_EXPIRY_MINUTES
+    ) {
+      return res.status(400).json({
+        error: `expiresInMinutes must be an integer between 1 and ${MAX_EXPIRY_MINUTES}`,
+      });
+    }
+    expiresAt = new Date(Date.now() + minutes * 60 * 1000);
   }
 
   //Custom Alias check
@@ -72,8 +91,8 @@ app.post("/shorten", async (req, res) => {
       return res.status(400).json({ error: "That alias is reserved" });
     }
     try {
-      await Link.create({ code: alias, url });
-      return res.status(201).json({ code: alias });
+      await Link.create({ code: alias, url, expiresAt });
+      return res.status(201).json({ code: alias, expiresAt });
     } catch (error) {
       if (error.code === 11000) {
         return res.status(409).json({ error: "That alias is already taken" });
@@ -90,9 +109,10 @@ app.post("/shorten", async (req, res) => {
     for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
       const counter = await getNextSequence();
       const code = encodeBase62(counter);
+      if (RESERVED.includes(code.toLowerCase())) continue;
       try {
-        await Link.create({ code, url });
-        return res.status(201).json({ code });
+        await Link.create({ code, url, expiresAt });
+        return res.status(201).json({ code, expiresAt });
       } catch (error) {
         if (error.code !== 11000) throw error;
       }
@@ -120,8 +140,10 @@ app.get("/stats/:code", async (req, res) => {
       url: link.url,
       clicks: link.clicks,
       createdAt: link.createdAt,
+      expiresAt: link.expiresAt ?? null,
     });
   } catch (error) {
+    console.error(error);
     return res
       .status(500)
       .json({ error: "Something went wrong on server side" });
@@ -134,7 +156,10 @@ app.get("/:code", async (req, res) => {
   try {
     const link = await Link.findOneAndUpdate({ code }, { $inc: { clicks: 1 } });
     if (!link) return res.status(404).json({ error: "Short link not found" });
-    return res.redirect(link.url);
+    if (link.expiresAt && link.expiresAt < new Date()) {
+      return res.status(410).json({ error: "This link has expired" });
+    }
+    return res.redirect(302, link.url);
   } catch (error) {
     console.error(error);
     return res
