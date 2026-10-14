@@ -26,7 +26,10 @@ const RESERVED = [
 const MAX_ATTEMPTS = 5;
 const ALLOWED_PROTOCOLS = ["http:", "https:"];
 const MAX_EXPIRY_MINUTES = 525600;
-const PORT = process.env.PORT;
+const WINDOW_MS = 60 * 1000;
+const LIMIT = 10;
+const hits = new Map();
+const PORT = process.env.PORT || 3000;
 const express = require("express");
 const app = express();
 const Link = require("./models/Link");
@@ -39,8 +42,29 @@ app.get("/", (req, res) => {
   res.send("shortener is alive baby.");
 });
 
+//Middleware for rate limiting
+function maxRequest(req, res, next) {
+  const timeNow = Date.now();
+  const ip = req.ip;
+  const entry = hits.get(ip);
+
+  if (!entry || timeNow >= entry.resetAt) {
+    hits.set(ip, { count: 1, resetAt: timeNow + WINDOW_MS });
+    return next();
+  }
+  if (entry.count >= LIMIT) {
+    const secondsLeft = Math.ceil((entry.resetAt - timeNow) / 1000);
+    res.set("Retry-After", secondsLeft);
+    return res
+      .status(429)
+      .json({ error: "Too many requests, try again later" });
+  }
+  entry.count++;
+  return next();
+}
+
 //Post path for link shortener
-app.post("/shorten", async (req, res) => {
+app.post("/shorten", maxRequest, async (req, res) => {
   //URL check for validation
   const url = req.body?.url;
   if (typeof url !== "string" || !url.trim()) {
