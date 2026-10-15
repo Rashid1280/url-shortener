@@ -1,34 +1,19 @@
-function createRateLimiter({ windowMs, limit }) {
-  const hits = new Map();
+const { rateLimit } = require("express-rate-limit");
 
-  setInterval(() => {
-    const now = Date.now();
-    for (const [ip, entry] of hits) {
-      if (now > entry.resetAt) {
-        hits.delete(ip);
-      }
-    }
-  }, windowMs);
+const shortenLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 10,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: { error: "Too many requests, try again later" },
+});
 
-  return function (req, res, next) {
-    const timeNow = Date.now();
-    const ip = req.ip;
-    const entry = hits.get(ip);
+const readLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 100,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: { error: "Too many requests, try again later" },
+});
 
-    if (!entry || timeNow >= entry.resetAt) {
-      hits.set(ip, { count: 1, resetAt: timeNow + windowMs });
-      return next();
-    }
-    if (entry.count >= limit) {
-      const secondsLeft = Math.ceil((entry.resetAt - timeNow) / 1000);
-      res.set("Retry-After", secondsLeft);
-      return res
-        .status(429)
-        .json({ error: "Too many requests, try again later" });
-    }
-    entry.count++;
-    return next();
-  };
-}
-
-module.exports = createRateLimiter;
+module.exports = { shortenLimiter, readLimiter };

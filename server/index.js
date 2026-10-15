@@ -32,17 +32,12 @@ const app = express();
 const Link = require("./models/Link");
 const getNextSequence = require("./utils/getNextSequence");
 const encodeBase62 = require("./utils/base62");
-const createRateLimiter = require("./middleware/rateLimiter");
-
+const { shortenLimiter, readLimiter } = require("./middleware/rateLimiter");
 app.use(express.json());
 
 app.get("/", (req, res) => {
   res.send("shortener is alive baby.");
 });
-
-//Middleware for rate limiting
-const shortenLimiter = createRateLimiter({ windowMs: 60 * 1000, limit: 10 });
-const readLimiter = createRateLimiter({ windowMs: 60 * 1000, limit: 100 });
 
 //Post path for link shortener
 app.post("/shorten", shortenLimiter, async (req, res) => {
