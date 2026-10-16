@@ -1,31 +1,11 @@
 require("dotenv").config();
 require("./config/db");
-const RESERVED = [
-  "shorten",
-  "admin",
-  "login",
-  "logout",
-  "signup",
-  "register",
-  "dashboard",
-  "stats",
-  "analytics",
-  "health",
-  "status",
-  "static",
-  "assets",
-  "public",
-  "account",
-  "profile",
-  "settings",
-  "support",
-  "contact",
-  "privacy",
-  "terms",
-];
-const MAX_ATTEMPTS = 5;
-const ALLOWED_PROTOCOLS = ["http:", "https:"];
-const MAX_EXPIRY_MINUTES = 525600;
+const {
+  RESERVED,
+  MAX_ATTEMPTS,
+  ALLOWED_PROTOCOLS,
+  MAX_EXPIRY_MINUTES,
+} = require("./config/constants");
 const PORT = process.env.PORT || 3000;
 const express = require("express");
 const app = express();
