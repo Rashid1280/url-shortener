@@ -20,6 +20,7 @@ const RESERVED = [
   "contact",
   "privacy",
   "terms",
+  "api",
 ];
 const MAX_ATTEMPTS = 5;
 const ALLOWED_PROTOCOLS = ["http:", "https:"];
