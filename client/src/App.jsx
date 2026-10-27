@@ -12,6 +12,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [result, setResult] = useState(null);
+  const [copied, setCopied] = useState(false);
 
   const shortUrl = result ? `${API_URL}/${result.code}` : "";
 
@@ -20,6 +21,7 @@ function App() {
     setError(null);
     setResult(null);
     setLoading(true);
+    setCopied(false);
     const payload = { url };
     if (alias.trim()) {
       payload.alias = alias.trim();
@@ -34,6 +36,19 @@ function App() {
       setError(err.message);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleCopy() {
+    try {
+      await navigator.clipboard.writeText(shortUrl);
+      setCopied(true);
+      setTimeout(() => {
+        setCopied(false);
+      }, 2000);
+    } catch (err) {
+      console.error(err);
+      setError("Could not copy. Please copy the link manually.");
     }
   }
 
@@ -52,6 +67,8 @@ function App() {
       result={result}
       shortUrl={shortUrl}
       onSubmit={handleSubmit}
+      copied={copied}
+      onCopy={handleCopy}
     />
   );
 }

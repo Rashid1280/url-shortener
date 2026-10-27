@@ -1,12 +1,22 @@
 import "./ShortenForm.css";
+import { QRCodeSVG } from "qrcode.react";
 
 export default function ShortenForm({
-  url, setUrl,
-  alias, setAlias,
-  minutes, setMinutes,
-  showAdvanced, setShowAdvanced,
-  loading, error, result, shortUrl,
+  url,
+  setUrl,
+  alias,
+  setAlias,
+  minutes,
+  setMinutes,
+  showAdvanced,
+  setShowAdvanced,
+  loading,
+  error,
+  result,
+  shortUrl,
   onSubmit,
+  copied,
+  onCopy,
 }) {
   return (
     <main className="card">
@@ -60,9 +70,15 @@ export default function ShortenForm({
           <a href={shortUrl} target="_blank" rel="noopener noreferrer">
             {shortUrl}
           </a>
+          <button type="button" onClick={onCopy}>
+            {copied ? "Copied!" : "Copy link"}
+          </button>
           {result.expiresAt && (
             <p>Expires: {new Date(result.expiresAt).toLocaleString()}</p>
           )}
+          <div className="qr">
+            <QRCodeSVG value={shortUrl} size={160} />
+          </div>
         </div>
       )}
     </main>
