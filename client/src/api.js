@@ -13,6 +13,12 @@ export async function shortenUrl(payload) {
   }
   const data = await res.json().catch(() => null);
   if (!res.ok) {
+    if (res.status === 429) {
+      const seconds = Number(res.headers.get("Retry-After"));
+      throw new Error(
+        `Too many requests. Please try again in ${seconds} seconds.`,
+      );
+    }
     throw new Error(data?.error || "Something went wrong on our side");
   }
   return data;
