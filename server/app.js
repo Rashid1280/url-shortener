@@ -11,7 +11,10 @@ app.get("/", (req, res) => {
 
 app.use(
   "/api",
-  cors({ origin: process.env.CLIENT_ORIGIN || "http://localhost:5173" }),
+  cors({
+    origin: process.env.CLIENT_ORIGIN || "http://localhost:5173",
+    exposedHeaders: ["Retry-After"],
+  }),
 );
 
 app.use("/api", linkRoutes);
