@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ShortenForm from "./ShortenForm";
-import { shortenUrl } from "./api";
+import { shortenUrl, getStats } from "./api";
+import StatsCheck from "./StatsCheck";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -13,6 +14,11 @@ function App() {
   const [error, setError] = useState(null);
   const [result, setResult] = useState(null);
   const [copied, setCopied] = useState(false);
+
+  const [statsCode, setStatsCode] = useState("");
+  const [statsLoading, setStatsLoading] = useState(false);
+  const [statsError, setStatsError] = useState(null);
+  const [stats, setStats] = useState(null);
 
   const shortUrl = result ? `${API_URL}/${result.code}` : "";
 
@@ -52,24 +58,49 @@ function App() {
     }
   }
 
+  async function handleCheck(e) {
+    e.preventDefault();
+    setStatsError(null);
+    setStatsLoading(true);
+    setStats(null);
+    try {
+      const data = await getStats(statsCode.trim());
+      setStats(data);
+    } catch (err) {
+      setStatsError(err.message);
+    } finally {
+      setStatsLoading(false);
+    }
+  }
+
   return (
-    <ShortenForm
-      url={url}
-      setUrl={setUrl}
-      alias={alias}
-      setAlias={setAlias}
-      minutes={minutes}
-      setMinutes={setMinutes}
-      showAdvanced={showAdvanced}
-      setShowAdvanced={setShowAdvanced}
-      loading={loading}
-      error={error}
-      result={result}
-      shortUrl={shortUrl}
-      onSubmit={handleSubmit}
-      copied={copied}
-      onCopy={handleCopy}
-    />
+    <div className="page">
+      <ShortenForm
+        url={url}
+        setUrl={setUrl}
+        alias={alias}
+        setAlias={setAlias}
+        minutes={minutes}
+        setMinutes={setMinutes}
+        showAdvanced={showAdvanced}
+        setShowAdvanced={setShowAdvanced}
+        loading={loading}
+        error={error}
+        result={result}
+        shortUrl={shortUrl}
+        onSubmit={handleSubmit}
+        copied={copied}
+        onCopy={handleCopy}
+      />
+      <StatsCheck
+        code={statsCode}
+        setCode={setStatsCode}
+        loading={statsLoading}
+        error={statsError}
+        stats={stats}
+        onCheck={handleCheck}
+      />
+    </div>
   );
 }
 

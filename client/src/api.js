@@ -1,13 +1,9 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
-export async function shortenUrl(payload) {
+async function request(path, options) {
   let res;
   try {
-    res = await fetch(`${API_URL}/api/shorten`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
+    res = await fetch(`${API_URL}${path}`, options);
   } catch (error) {
     throw new Error("Could not reach the server.", { cause: error });
   }
@@ -22,4 +18,15 @@ export async function shortenUrl(payload) {
     throw new Error(data?.error || "Something went wrong on our side");
   }
   return data;
+}
+
+export function shortenUrl(payload) {
+  return request("/api/shorten", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+}
+export function getStats(code) {
+  return request(`/api/stats/${encodeURIComponent(code)}`);
 }
