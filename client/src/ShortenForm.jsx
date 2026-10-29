@@ -1,4 +1,3 @@
-import "./ShortenForm.css";
 import { QRCodeSVG } from "qrcode.react";
 
 export default function ShortenForm({
@@ -19,8 +18,8 @@ export default function ShortenForm({
   onCopy,
 }) {
   return (
-    <main className="card">
-      <h1>Tiny</h1>
+    <main className="band">
+      <h1>Make long links short</h1>
       <p>Paste a long link, get a short one.</p>
 
       <form onSubmit={onSubmit}>

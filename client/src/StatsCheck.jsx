@@ -7,7 +7,7 @@ export default function StatsCheck({
   onCheck,
 }) {
   return (
-    <section className="card">
+    <section className="band stats-band">
       <h2>Check a link's stats</h2>
       <form className="row" onSubmit={onCheck}>
         <input

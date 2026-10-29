@@ -74,7 +74,12 @@ function App() {
   }
 
   return (
-    <div className="page">
+    <>
+      <header className="topbar">
+        <span className="logo">
+          SHORT<span>IE</span>
+        </span>
+      </header>
       <ShortenForm
         url={url}
         setUrl={setUrl}
@@ -100,7 +105,7 @@ function App() {
         stats={stats}
         onCheck={handleCheck}
       />
-    </div>
+    </>
   );
 }
 
