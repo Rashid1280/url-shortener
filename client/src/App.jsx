@@ -38,6 +38,10 @@ function App() {
     try {
       const data = await shortenUrl(payload);
       setResult(data);
+      setUrl("");
+      setAlias("");
+      setMinutes("");
+      setShowAdvanced(false);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -66,6 +70,7 @@ function App() {
     try {
       const data = await getStats(statsCode.trim());
       setStats(data);
+      setStatsCode("");
     } catch (err) {
       setStatsError(err.message);
     } finally {
