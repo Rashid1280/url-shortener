@@ -132,18 +132,37 @@ button:disabled {
   background: var(--soft);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 1rem;
+  padding: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+}
+.result-info {
+  flex: 1 1 260px;
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
   align-items: flex-start;
+  gap: 0.5rem;
+}
+.label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.short-link {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--navy);
   word-break: break-all;
 }
-.result a {
-  color: var(--navy);
-  font-weight: 600;
+.result button {
+  padding: 0.5rem 1rem;
 }
 .qr {
+  flex: none;
   background: #fff;
   padding: 12px;
   border-radius: 6px;
@@ -171,4 +190,9 @@ button:disabled {
   .band {
     padding-block: 1.75rem;
   }
+}
+h1,
+.topbar,
+h1 + p {
+  text-align: center;
 }

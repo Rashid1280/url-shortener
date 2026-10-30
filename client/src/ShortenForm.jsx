@@ -66,17 +66,25 @@ export default function ShortenForm({
 
       {result && (
         <div className="result">
-          <a href={shortUrl} target="_blank" rel="noopener noreferrer">
-            {shortUrl}
-          </a>
-          <button type="button" onClick={onCopy}>
-            {copied ? "Copied!" : "Copy link"}
-          </button>
-          {result.expiresAt && (
-            <p>Expires: {new Date(result.expiresAt).toLocaleString()}</p>
-          )}
+          <div className="result-info">
+            <p className="label">Your short link</p>
+            <a
+              className="short-link"
+              href={shortUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {shortUrl}
+            </a>
+            <button type="button" onClick={onCopy}>
+              {copied ? "Copied!" : "Copy link"}
+            </button>
+            {result.expiresAt && (
+              <p>Expires: {new Date(result.expiresAt).toLocaleString()}</p>
+            )}
+          </div>
           <div className="qr">
-            <QRCodeSVG value={shortUrl} size={160} />
+            <QRCodeSVG value={shortUrl} size={140} />
           </div>
         </div>
       )}
