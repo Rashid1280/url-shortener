@@ -5,6 +5,7 @@ async function connectDB() {
     console.log("MongoDB Connected");
   } catch (error) {
     console.error("error connecting mongoDB: ", error);
+    process.exit(1);
   }
 }
 connectDB();
