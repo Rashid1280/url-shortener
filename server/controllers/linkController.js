@@ -124,11 +124,12 @@ async function getStats(req, res) {
 async function redirect(req, res) {
   const code = req.params.code;
   try {
-    const link = await Link.findOneAndUpdate({ code }, { $inc: { clicks: 1 } });
+    const link = await Link.findOne({ code });
     if (!link) return res.status(404).json({ error: "Short link not found" });
     if (link.expiresAt && link.expiresAt < new Date()) {
       return res.status(410).json({ error: "This link has expired" });
     }
+    await Link.updateOne({ code }, { $inc: { clicks: 1 } });
     return res.redirect(302, link.url);
   } catch (error) {
     console.error(error);
