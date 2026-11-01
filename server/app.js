@@ -4,9 +4,11 @@ app.use(express.json());
 const linkRoutes = require("./routes/linkRoutes");
 const redirectRoutes = require("./routes/redirectRoutes");
 const cors = require("cors");
+const mongoose = require("mongoose");
 
-app.get("/", (req, res) => {
-  res.send("shortener is alive baby.");
+app.get("/health", (req, res) => {
+  const dbUp = mongoose.connection.readyState === 1; // 0 off, 1 connected, 2 connecting, 3 disconnecting
+  res.status(dbUp ? 200 : 503).json({ status: dbUp ? "ok" : "db down" });
 });
 
 app.use(
