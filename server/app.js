@@ -12,6 +12,15 @@ app.get("/health", (req, res) => {
   res.status(dbUp ? 200 : 503).json({ status: dbUp ? "ok" : "db down" });
 });
 
+//temp: to check the no. of proxy on render
+app.get("/ip-debug", (req, res) => {
+  res.json({
+    "req.ip": req.ip,
+    "x-forwarded-for": req.headers["x-forwarded-for"],
+    socket: req.socket.remoteAddress,
+  });
+});
+
 app.use(
   "/api",
   cors({
