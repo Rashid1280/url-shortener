@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-app.set("trust proxy", 1);
+app.set("trust proxy", 3);
 app.use(express.json());
 const linkRoutes = require("./routes/linkRoutes");
 const redirectRoutes = require("./routes/redirectRoutes");
