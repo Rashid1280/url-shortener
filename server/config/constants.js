@@ -25,10 +25,12 @@ const RESERVED = [
 const MAX_ATTEMPTS = 5;
 const ALLOWED_PROTOCOLS = ["http:", "https:"];
 const MAX_EXPIRY_MINUTES = 525600;
+const MAX_URL_LENGTH = 2048;
 
 module.exports = {
   RESERVED,
   MAX_ATTEMPTS,
   ALLOWED_PROTOCOLS,
   MAX_EXPIRY_MINUTES,
+  MAX_URL_LENGTH,
 };

@@ -6,6 +6,7 @@ const {
   ALLOWED_PROTOCOLS,
   MAX_ATTEMPTS,
   MAX_EXPIRY_MINUTES,
+  MAX_URL_LENGTH,
 } = require("../config/constants");
 
 //Post path for link shortener
@@ -14,6 +15,11 @@ async function shorten(req, res) {
   const url = req.body?.url;
   if (typeof url !== "string" || !url.trim()) {
     return res.status(400).json({ error: "url must be a non-empty string" });
+  }
+  if (url.length > MAX_URL_LENGTH) {
+    return res
+      .status(400)
+      .json({ error: `URL must be at most ${MAX_URL_LENGTH} characters` });
   }
   let parsed;
   try {
