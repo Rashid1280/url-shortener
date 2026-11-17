@@ -13,6 +13,7 @@ export default function StatsCheck({
         <input
           type="text"
           required
+          aria-label="Short code to look up"
           placeholder="Short code, e.g. abc123"
           value={code}
           onChange={(e) => setCode(e.target.value)}

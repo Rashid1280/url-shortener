@@ -26,6 +26,7 @@ export default function ShortenForm({
         <input
           type="url"
           required
+          aria-label="Long URL to shorten"
           placeholder="https://example.com/very/long/link"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
@@ -43,6 +44,7 @@ export default function ShortenForm({
           <div className="advanced">
             <input
               type="text"
+              aria-label="Custom alias (optional)"
               placeholder="Custom alias (5-15 letters, numbers, hyphens)"
               value={alias}
               onChange={(e) => setAlias(e.target.value)}
@@ -50,6 +52,7 @@ export default function ShortenForm({
             <input
               type="number"
               min="1"
+              aria-label="Expiry in minutes (optional)"
               placeholder="Expires in (minutes)"
               value={minutes}
               onChange={(e) => setMinutes(e.target.value)}
@@ -62,8 +65,11 @@ export default function ShortenForm({
         </button>
       </form>
 
-      {error && <p className="error">{error}</p>}
-
+      {error && (
+        <p className="error" role="alert">
+          {error}
+        </p>
+      )}
       {result && (
         <div className="result">
           <div className="result-info">
