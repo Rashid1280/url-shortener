@@ -172,6 +172,13 @@ button:disabled {
   grid-template-columns: max-content 1fr;
   gap: 0.4rem 1rem;
   margin: 0;
+  align-items: baseline;
+}
+.stats .clicks {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.2;
 }
 .stats dt {
   color: var(--muted);

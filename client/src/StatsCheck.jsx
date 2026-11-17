@@ -27,8 +27,7 @@ export default function StatsCheck({
       {stats && (
         <dl className="stats">
           <dt>Clicks</dt>
-          <dd>{stats.clicks}</dd>
-          <dt>Created</dt>
+          <dd className="clicks">{stats.clicks}</dd> <dt>Created</dt>
           <dd>{new Date(stats.createdAt).toLocaleString()}</dd>
           <dt>Expires</dt>
           <dd>
