@@ -22,7 +22,7 @@ export default function ShortenForm({
       <h1>Make long links short</h1>
       <p>Paste a long link, get a short one.</p>
 
-      <form onSubmit={onSubmit}>
+      <form className="shorten-form" onSubmit={onSubmit}>
         <input
           type="url"
           required
