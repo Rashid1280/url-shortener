@@ -84,7 +84,7 @@ export default function ShortenForm({
             )}
           </div>
           <div className="qr">
-            <QRCodeSVG value={shortUrl} size={140} />
+            <QRCodeSVG value={shortUrl} size={180} />{" "}
           </div>
         </div>
       )}

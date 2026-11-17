@@ -196,3 +196,18 @@ h1,
 h1 + p {
   text-align: center;
 }
+@media (max-width: 559px) {
+  .result {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .result-info {
+    flex: none;
+    width: 100%;
+    align-items: center;
+  }
+  .short-link {
+    font-size: 1rem;
+  }
+}
