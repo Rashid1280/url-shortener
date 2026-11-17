@@ -172,6 +172,13 @@ button:disabled {
   grid-template-columns: max-content 1fr;
   gap: 0.4rem 1rem;
   margin: 0;
+  align-items: baseline;
+}
+.stats .clicks {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.2;
 }
 .stats dt {
   color: var(--muted);
@@ -195,4 +202,37 @@ h1,
 .topbar,
 h1 + p {
   text-align: center;
+}
+@media (max-width: 559px) {
+  .result {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .result-info {
+    flex: none;
+    width: 100%;
+    align-items: center;
+  }
+  .short-link {
+    font-size: 1rem;
+  }
+}
+@media (min-width: 600px) {
+  .shorten-form {
+    display: grid;
+    grid-template-columns: 1fr auto;
+  }
+  .shorten-form input[type="url"] {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .shorten-form button[type="submit"] {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .shorten-form .link-btn,
+  .shorten-form .advanced {
+    grid-column: 1 / -1;
+  }
 }

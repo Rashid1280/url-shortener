@@ -13,6 +13,7 @@ export default function StatsCheck({
         <input
           type="text"
           required
+          aria-label="Short code to look up"
           placeholder="Short code, e.g. abc123"
           value={code}
           onChange={(e) => setCode(e.target.value)}
@@ -27,8 +28,7 @@ export default function StatsCheck({
       {stats && (
         <dl className="stats">
           <dt>Clicks</dt>
-          <dd>{stats.clicks}</dd>
-          <dt>Created</dt>
+          <dd className="clicks">{stats.clicks}</dd> <dt>Created</dt>
           <dd>{new Date(stats.createdAt).toLocaleString()}</dd>
           <dt>Expires</dt>
           <dd>
